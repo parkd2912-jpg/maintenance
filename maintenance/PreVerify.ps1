@@ -193,7 +193,7 @@ try {
   # --- 4. 필수 파일 / VERSION / 구문 / BOM ---
   $required = @('install.ps1','install.cmd','run-maintenance.ps1','run-now.ps1','uninstall.ps1',
     'update.ps1','update-common.ps1','업데이트.ps1','feedback.ps1','config.json','VERSION',
-    'README.md','readme.txt','newbie.txt','LICENSE',
+    'README.md','readme.txt','newbie.txt','LICENSE','버전안내.ps1','UPDATE_SCHEDULE.md',
     (Join-Path 'Simple maintenance' 'maintenance.ps1'), (Join-Path 'Simple maintenance' 'config.json'))
   $missing = @($required | Where-Object { -not (Test-Path -LiteralPath (Join-Path $canary $_) -PathType Leaf) })
   Add-Row '필수 파일' ($missing.Count -eq 0) $(if ($missing.Count -eq 0) { "$($required.Count)개 모두 존재" } else { "누락: $($missing -join ', ')" })

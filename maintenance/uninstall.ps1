@@ -81,8 +81,8 @@ function L {
 }
 # 설치 시 언어에 상관없이 모든 세트(구 이름 포함)를 지운다(언어 전환 후 잔여 바로가기 방지).
 $allShortcutNames = @(
-  '자동 유지보수 점검.lnk', '자동 유지보수 피드백.lnk', '자동 유지보수 제거.lnk',
-  'maintenance.lnk', 'maintenance feedback.lnk', 'maintenance remove.lnk',
+  '자동 유지보수 점검.lnk', '자동 유지보수 피드백.lnk', '자동 유지보수 제거.lnk', '자동 유지보수 버전 안내.lnk',
+  'maintenance.lnk', 'maintenance feedback.lnk', 'maintenance remove.lnk', 'version guide.lnk',
   'auto-maintenance.lnk', 'feedback maintenance.lnk', 'remove maintenance.lnk'
 )
 

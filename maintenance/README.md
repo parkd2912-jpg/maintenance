@@ -31,6 +31,7 @@ uninstall.ps1 (바탕화면 "자동 유지보수 제거" / "remove maintenance")
 > | 점검 | `자동 유지보수 점검.lnk` | `auto-maintenance.lnk` |
 > | 제거 | `자동 유지보수 제거.lnk` | `remove maintenance.lnk` |
 > | 피드백 | `자동 유지보수 피드백.lnk` | `feedback maintenance.lnk` |
+> | 버전 안내 (Ulanzi 버튼용) | `자동 유지보수 버전 안내.lnk` | `version guide.lnk` |
 > | 결과 txt | `자동유지보수_yyyyMMdd_HHmm.txt` | `auto-maintenance_yyyyMMdd_HHmm.txt` |
 > | 실패 txt | `자동유지보수_실패_*.txt` | `auto-maintenance_failed_*.txt` |
 > | 결과 보관 폴더 | `자동점검결과` | `maintenance results` |
@@ -128,23 +129,23 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File tests\verify-helper-pari
 > 확인 위치: 바탕화면 `자동유지보수_*.txt`, 로그는 `logs\runner-YYYY-MM.log`(wrapper) 와
 > `Simple maintenance\logs\maintain-YYYY-MM-DD.log`(본체). 결과 txt 가 없으면 이 두 로그를 보내면 원인을 알 수 있다.
 
-## 버전 (현재 **v1.15.2**, 2026-11-21)
+## 버전 (현재 **v1.16.0**, 2026-11-21)
 
 수정할 때마다 버전을 올린다. **`VERSION` 파일(킷 루트)이 유일한 기준**이고, 각 스크립트가 이 파일을 읽어
 콘솔·결과 txt·로그에 찍는다. "친구 PC에서 어느 버전이 돌았는지"를 파일만 보고 확인할 수 있다.
 
 ```
 VERSION 파일 (2줄)
-  1.15.2
+  1.16.0
   2026-11-21
 ```
 
 | 확인 위치 | 표시 예 |
 |--------|---------|
-| "지금 점검" 콘솔 | `자동 유지보수 점검 (지금 실행)` / `v1.15.2 (2026-11-21)` |
-| 결과 txt | `실행: 2026-11-21 12:30` 아래 `버전: v1.15.2 (2026-11-21)` (영어권 `Run:` / `Version:`) |
-| 실패/안내 txt | `버전: v1.15.2 (2026-11-21)` |
-| 로그 | `maintain-*.log` → `VERSION: v1.15.2 (2026-11-21)`, `runner-*.log` → `Kit version: …` |
+| "지금 점검" 콘솔 | `자동 유지보수 점검 (지금 실행)` / `v1.16.0 (2026-11-21)` |
+| 결과 txt | `실행: 2026-11-21 12:30` 아래 `버전: v1.16.0 (2026-11-21)` (영어권 `Run:` / `Version:`) |
+| 실패/안내 txt | `버전: v1.16.0 (2026-11-21)` |
+| 로그 | `maintain-*.log` → `VERSION: v1.16.0 (2026-11-21)`, `runner-*.log` → `Kit version: …` |
 | JSON | `status.json`, `Simple maintenance\last-result.json` 의 `version` |
 | 설치 폴더 | `VERSION` 파일 |
 
@@ -186,6 +187,7 @@ VERSION 파일 (2줄)
 | 1.15.0 | 2026-11-21 | **업데이트 실패 이력 읽기 + 오류 코드 해석(보고만)** — Microsoft 공식 오류 코드 표를 근거로, 최근 30일 `Microsoft-Windows-WindowsUpdateClient` 설치/다운로드 실패 이벤트(20/31)를 읽어 `0x80070002` 같은 숫자를 쉬운 말로 해석해 결과표·권고에 표시. **복구 명령(DISM/sfc)은 절대 실행하지 않고 읽기만 함.** 초보자용 결과표에 `[40] 업데이트 실패 메모` 항목 추가, `newbie.txt` 40개 설명 동기화, `-SelfTestUpdateFail` 회귀 검증 추가. |
 | 1.15.1 | 2026-11-21 | **3단계 검증 배포 + 미리 해보기 채널** — 예약일 2주 전 로컬 설치 검증 → 1주 전 RC(`vX.Y.Z-rcN`) 공개·매일 미리검증 → 예약일 안정본 공개·자동업데이트. 안내창에 `[ 현 버전 다운로드 ]`(안정화된 기능 + 추가된 기능 n가지)와 아래 작은 **미리 해보기** 버튼(RC = "이런 기능이 준비 중", 문제 시 제작자 연락, 최소 로컬 검증 완료)을 표시. RC 는 예약 작업이 절대 설치하지 않고, 누르면 별도 canary 폴더 + 전용 바로가기만 만들어 현재 설치본을 건드리지 않음. `PreVerify.ps1`(ZIP 미포함)이 RC 의 파일/구문/BOM/VERSION/회귀 SelfTest 를 매일 검사해 바탕화면 `자동유지보수_미리검증결과.txt` 에 보고. |
 | 1.15.2 | 2026-11-21 | **피드백 개인정보 범위·후속 수정 안내** — 피드백 파일·동의 질문·점검 종료 화면·`newbie.txt` 에 "오류 확인용으로 CPU 모델·GPU 모델만 올라가고 이름·경로·시리얼·IP 등은 자동 삭제(보고서 구분용 해시 6자리 포함)", "보내주신 문제는 대부분 다음 버전에서 수정" 문구 추가. |
+| 1.16.0 | 2026-11-21 | **Ulanzi 버튼용 버전 안내** — 새 `버전안내.ps1` + 바탕화면 `자동 유지보수 버전 안내` 바로가기. 버튼 화면용 3줄(`현재 vX / 다음 vY / 예약 N건`)을 `자동유지보수_버튼화면.txt` 에 저장하고, 현재 버전 기능 → 다음 예약 버전의 추가·변경 기능·예약 일정을 `자동유지보수_버전안내.txt` 에 요약해 메모장으로 연다. 읽기 전용(설치본·예약작업 변경 없음). `UPDATE_SCHEDULE.md` 를 ZIP 에 포함. |
 
 ## 바탕화면 결과 파일 정리 + 자동 실행 콘솔 표시 (2026-11-17, v1.3.0 / v1.4.0)
 
@@ -737,6 +739,24 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "I:\code\maintenance\uninsta
 | `adBlockMaxDomains` | `500` | 안전 상한(초과 시 앞에서부터 적용) |
 | `adDnsEnabled` | `false` | DNS 필터링 (**opt-in**) |
 | `adDnsServers` | `["94.140.14.14","94.140.15.15"]` | AdGuard DNS(광고+트래커). IPv4 만 허용 |
+
+## 버전 안내 버튼 (v1.16.0) — Ulanzi 조회/다운/보고 다음 버튼
+
+바탕화면 **"자동 유지보수 버전 안내"** (`version guide.lnk`) 를 누르면 `버전안내.ps1` 이 실행됩니다.
+Ulanzi 버튼에 **"버전"** 라벨을 붙여 이 바로가기를 연결하면 됩니다.
+
+- **버튼 화면용 3줄** — `자동유지보수_버튼화면.txt` 에 저장 (조회/다운/보고 버튼과 같은 방식으로 기기 앱에서 읽어 표시)
+  ```
+  현재 v1.16.0
+  다음 v1.16.1
+  예약 5건
+  ```
+- **메모장 요약** — `자동유지보수_버전안내.txt` 를 열어 보여줌
+  - 현재 버전 기능 목록 (README 버전 표에서 읽음)
+  - 다음 예약 버전의 추가·변경 기능 (UPDATE_SCHEDULE.md W1 행에서 읽음)
+  - 예약 일정 전체 (W1~W4 + M1)
+- **읽기 전용** — 설치본·예약 작업·설정을 바꾸지 않습니다. `UPDATE_SCHEDULE.md` 를 ZIP 에 포함해 어느 PC 에서나 같은 값이 나오게 합니다.
+- 테스트: `powershell -File 버전안내.ps1 -NoOpen` (메모장을 열지 않고 출력만 확인)
 
 ## 피드백 내보내기 (v1.6.0) — GitHub 자동 업로드 + 시스템 언어 추종
 

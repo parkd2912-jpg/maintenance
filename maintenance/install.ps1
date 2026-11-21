@@ -39,6 +39,9 @@ $maint = Join-Path $sm 'maintenance.ps1'
 $runNow = Join-Path $root 'run-now.ps1'
 $uninstall = Join-Path $root 'uninstall.ps1'
 $feedback = Join-Path $root 'feedback.ps1'
+
+# v1.16.0: Ulanzi 버튼용 버전 안내 (현재/다음/예약 수 + 메모장 요약)
+$versionGuide = Join-Path $root '버전안내.ps1'
 $launcher = Join-Path $root 'install.cmd'
 $taskName = 'OpenCode-Maintenance'
 
@@ -92,14 +95,14 @@ function L {
 }
 # 바로가기 이름 (v1.7.0): 한국어=한글 이름 / 그 외=auto-maintenance 계열
 $shortcutNames = if ($kitLang -eq 'ko') {
-  @{ Check = '자동 유지보수 점검.lnk'; Feedback = '자동 유지보수 피드백.lnk'; Remove = '자동 유지보수 제거.lnk' }
+  @{ Check = '자동 유지보수 점검.lnk'; Feedback = '자동 유지보수 피드백.lnk'; Remove = '자동 유지보수 제거.lnk'; VersionGuide = '자동 유지보수 버전 안내.lnk' }
 } else {
-  @{ Check = 'auto-maintenance.lnk'; Feedback = 'feedback maintenance.lnk'; Remove = 'remove maintenance.lnk' }
+  @{ Check = 'auto-maintenance.lnk'; Feedback = 'feedback maintenance.lnk'; Remove = 'remove maintenance.lnk'; VersionGuide = 'version guide.lnk' }
 }
 # 언어 전환 후 재설치 시 이전 언어의 바로가기가 남지 않도록 모든 세트(구 이름 포함)를 정리한다.
 $allShortcutNames = @(
-  '자동 유지보수 점검.lnk', '자동 유지보수 피드백.lnk', '자동 유지보수 제거.lnk',
-  'maintenance.lnk', 'maintenance feedback.lnk', 'maintenance remove.lnk',
+  '자동 유지보수 점검.lnk', '자동 유지보수 피드백.lnk', '자동 유지보수 제거.lnk', '자동 유지보수 버전 안내.lnk',
+  'maintenance.lnk', 'maintenance feedback.lnk', 'maintenance remove.lnk', 'version guide.lnk',
   'auto-maintenance.lnk', 'feedback maintenance.lnk', 'remove maintenance.lnk'
 )
 
@@ -140,7 +143,7 @@ Write-Host ''
 # --- 2. 파일 확인 ---
 # .cmd 런처도 배포 패키지의 일부이므로 존재와 기본 내용을 함께 확인한다.
 # 내용 무결성은 릴리즈 ZIP 전체의 .sha256 으로 이미 검증되지만, 패키징 누락은 여기서 막는다.
-foreach ($f in @($launcher, $wrapper, $maint, $runNow, $uninstall, $feedback)) {
+foreach ($f in @($launcher, $wrapper, $maint, $runNow, $uninstall, $feedback, $versionGuide)) {
   if (-not (Test-Path -LiteralPath $f)) {
     Write-Host (L "오류: 필요한 파일이 없습니다 → $f" "Error: required file missing → $f")
     Write-Host (L '압축을 풀지 않았거나 파일이 이동되었습니다. 폴더째로 다시 받아 실행하세요.' 'The ZIP was not extracted or files were moved. Re-download the whole folder and run it.')
@@ -270,7 +273,8 @@ try {
   $defs = @(
     @{ Name = $shortcutNames.Check;    Script = $runNow;    Desc = (L '지금 바로 점검하고 결과를 보여줍니다' 'Run a check now and show the result') },
     @{ Name = $shortcutNames.Feedback; Script = $feedback;  Desc = (L '개인정보·위험코드를 지운 뒤 동의/비동의를 선택해 GitHub에 올립니다' 'Masks personal info and risky code, then asks consent before uploading to GitHub') },
-    @{ Name = $shortcutNames.Remove;   Script = $uninstall; Desc = (L '자동 점검을 끄고 바로가기를 지웁니다' 'Turns off the automatic check and removes the shortcuts') }
+    @{ Name = $shortcutNames.Remove;   Script = $uninstall; Desc = (L '자동 점검을 끄고 바로가기를 지웁니다' 'Turns off the automatic check and removes the shortcuts') },
+    @{ Name = $shortcutNames.VersionGuide; Script = $versionGuide; Desc = (L '현재/다음 버전과 예약 현황을 메모장으로 보여줍니다 (Ulanzi 버튼용)' 'Shows current/next version and schedule in Notepad (for Ulanzi button)') }
   )
   foreach ($d in $defs) {
     $lnkPath = Join-Path $desktop $d.Name
@@ -282,8 +286,8 @@ try {
     $lnk.Description = $d.Desc
     $lnk.Save()
   }
-  Write-Step (L '바탕화면 바로가기 생성 (점검 / 피드백 / 제거)' 'Desktop shortcuts created (check / feedback / remove)')
-  Write-Step (L "바로가기 이름: $($shortcutNames.Check) / $($shortcutNames.Feedback) / $($shortcutNames.Remove)" "Shortcut names: $($shortcutNames.Check) / $($shortcutNames.Feedback) / $($shortcutNames.Remove)")
+  Write-Step (L '바탕화면 바로가기 생성 (점검 / 피드백 / 제거 / 버전 안내)' 'Desktop shortcuts created (check / feedback / remove / version guide)')
+  Write-Step (L "바로가기 이름: $($shortcutNames.Check) / $($shortcutNames.Feedback) / $($shortcutNames.Remove) / $($shortcutNames.VersionGuide)" "Shortcut names: $($shortcutNames.Check) / $($shortcutNames.Feedback) / $($shortcutNames.Remove) / $($shortcutNames.VersionGuide)")
 } catch {
   Write-Host (L "  (경고) 바로가기 생성 실패: $($_.Exception.Message)" "  (Warning) Failed to create shortcuts: $($_.Exception.Message)")
 }
